@@ -1,13 +1,11 @@
 const Subject = require("../models/subject");
 const School = require("../models/school");
-const { SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
+const { isValidObjectId } = require("mongoose");
 
 exports.create = async (req, res) => {
-  const user = req.user;
-  if (user.role !== SUPERUSER && user.role !== SCHOOL_ADMIN)
-    return sendError(res, "User does not have permission for the action", 401);
-
   const { schoolId, name, fullMark, passMark } = req.body;
+
+  if (!isValidObjectId(schoolId)) return sendError(res, "Invalid schoolId");
 
   const school = await School.exists({ _id: schoolId });
   if (!school) sendError(res, "School does not exist");

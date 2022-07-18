@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const subjectSchema = mongoose.Schema(
   {
-    school: { type: String, trim: true },
+    school: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "School",
+    },
     name: {
       type: String,
       trim: true,

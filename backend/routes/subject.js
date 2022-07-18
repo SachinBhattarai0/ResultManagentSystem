@@ -1,7 +1,10 @@
 const router = require("express").Router();
 const { create } = require("../controllers/subject");
-const { userValidator } = require("../middlewares/validator");
+const {
+  userValidator,
+  OnlySuperUserOrSchoolAdmin,
+} = require("../middlewares/validator");
 
-router.post("/create/", userValidator, create);
+router.post("/create/", userValidator, OnlySuperUserOrSchoolAdmin, create);
 
 module.exports = router;

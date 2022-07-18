@@ -1,5 +1,5 @@
 const { check, validationResult } = require("express-validator");
-const { USER_ROLES, User } = require("../models/user");
+const { USER_ROLES, User, SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
 const jwt = require("jsonwebtoken");
 const sendError = require("../utils/sendError");
 const { isValidObjectId } = require("mongoose");
@@ -7,7 +7,6 @@ require("dotenv").config();
 
 exports.validate = (req, res, next) => {
   const errors = validationResult(req).array();
-  console.log(errors);
   if (errors[0])
     return sendError(res, `${errors[0].msg} for param ${errors[0].param}`);
   next();
@@ -42,6 +41,7 @@ exports.userInfoValidator = [
     })
     .withMessage(`roles must be one from ${USER_ROLES}`),
 ];
+
 exports.signInInfoValidator = [
   check("username")
     .trim()
@@ -50,6 +50,20 @@ exports.signInInfoValidator = [
     .withMessage("Username cannot be empty"),
   check("password").not().isEmpty().withMessage("Password should be present"),
 ];
+
+exports.OnlySuperUserOrSchoolAdmin = (req, res, next) => {
+  const user = req.user;
+  if (user.role !== SUPERUSER && user.role !== SCHOOL_ADMIN)
+    return sendError(res, "User does not have permission for the action", 401);
+  next();
+};
+
+exports.OnlySuperUser = (req, res, next) => {
+  const user = req.user;
+  if (user.role !== SUPERUSER)
+    return sendError(res, "User does not have permission for the action", 401);
+  next();
+};
 
 //This middleware checks for jwtToken in req.body and if it is
 //valid then user can be find in req.user in next middleware

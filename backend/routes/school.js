@@ -4,8 +4,16 @@ const {
   schoolValidator,
   validate,
   userValidator,
+  OnlySuperUser,
 } = require("../middlewares/validator");
 
-router.post("/create/", schoolValidator, userValidator, validate, createSchool);
+router.post(
+  "/create/",
+  schoolValidator,
+  userValidator,
+  OnlySuperUser,
+  validate,
+  createSchool
+);
 
 module.exports = router;
