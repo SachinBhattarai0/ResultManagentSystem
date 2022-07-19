@@ -2,11 +2,18 @@ const Assignment = require("../models/assignment");
 const School = require("../models/school");
 const ClassName = require("../models/class");
 const Subject = require("../models/subject");
-const { User } = require("../models/user");
+const { User, SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
 const { TEACHER } = require("../models/user");
 const sendError = require("../utils/sendError");
+const { isValidObjectId } = require("mongoose");
 
-exports.getAll = (req, res) => {};
+exports.getAll = async (req, res) => {
+  // const loggedInUser = req.user;
+  // const { assignmentOf } = req.body;
+  // if(!isValidObjectId(assignmentOf))return sendError(res,'Invalid id')
+  // const user = await User.findById(assignmentOf)
+  // if(loggedInUser.role === SUPERUSER || loggedInUser.role === SCHOOL_ADMIN || )
+};
 
 exports.create = async (req, res) => {
   const { schoolId, classId, subjectId, teacherId } = req.body;

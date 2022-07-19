@@ -68,8 +68,9 @@ exports.OnlySuperUser = (req, res, next) => {
 //This middleware checks for jwtToken in req.body and if it is
 //valid then user can be find in req.user in next middleware
 exports.userValidator = async (req, res, next) => {
-  const { jwtToken } = req.body;
-  if (!jwtToken) sendError(res, "Unauthenticated user");
+  const jwtToken = req.headers.authorization?.split(" ")[1];
+
+  if (!jwtToken) return sendError(res, "Unauthenticated user");
   let decodedToken;
   try {
     decodedToken = jwt.decode(jwtToken, process.env.JWT_SECRET);
