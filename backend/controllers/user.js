@@ -1,25 +1,34 @@
-const { User, DEFAULT_ROLE, SUPERUSER } = require("../models/user");
+const {
+  User,
+  DEFAULT_ROLE,
+  SUPERUSER,
+  TEACHER,
+  STUDENT,
+  SCHOOL_ADMIN,
+} = require("../models/user");
 const sendError = require("../utils/sendError");
 const jwt = require("jsonwebtoken");
 const School = require("../models/school");
 require("dotenv").config();
 
 exports.createUser = async (req, res) => {
+  const user = req.user
+
   const { username, password, schoolId, role } = req.body;
 
-  if (!schoolId && role !== SUPERUSER)
-    return sendError(res, "School must be present");
+  if (role !== TEACHER && role !== STUDENT)
+    return sendError(res, "Invalid role provided");
 
-  const school = await School.findOne({ _id: schoolId }).lean();
+  let school;
+  if (schoolId) school = await School.findOne({ _id: schoolId }).lean();
 
-  if (role !== SUPERUSER && !school)
-    return sendError(res, "School doesnot exist");
+  if (!school && user.role !== SCHOOL_ADMIN ) return sendError(res, "School doesnot exist");
 
   const newUser = new User({
     username,
     password,
-    school: school?._id,
-    role: role || DEFAULT_ROLE,
+    school: user.school || school._id, 
+    role: role,
   });
 
   try {
@@ -31,6 +40,28 @@ exports.createUser = async (req, res) => {
   return res
     .status(201)
     .json({ message: "User creted Successfully", userId: newUser._id });
+};
+
+exports.createAdmin = async (req, res) => {
+  const { username, password, schoolId } = req.body;
+
+  const school = await School.findOne({ _id: schoolId });
+  if (!school) return sendError(res, "Invalid school Id");
+
+  const newAdmin = new User({
+    username,
+    password,
+    school: school._id,
+    role: SCHOOL_ADMIN,
+  });
+
+  try {
+    await newAdmin.save();
+  } catch (error) {
+    return sendError(res, error);
+  }
+
+  return res.status(201).json("School admin created successfully");
 };
 
 exports.signIn = async (req, res) => {

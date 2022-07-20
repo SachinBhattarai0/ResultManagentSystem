@@ -3,14 +3,14 @@ const { createSchool } = require("../controllers/school");
 const {
   schoolValidator,
   validate,
-  userValidator,
+  authenticateUser,
   OnlySuperUser,
 } = require("../middlewares/validator");
 
 router.post(
   "/create/",
   schoolValidator,
-  userValidator,
+  authenticateUser,
   OnlySuperUser,
   validate,
   createSchool

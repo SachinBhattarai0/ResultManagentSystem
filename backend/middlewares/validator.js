@@ -1,5 +1,5 @@
 const { check, validationResult } = require("express-validator");
-const { USER_ROLES, User, SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
+const { User, SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
 const jwt = require("jsonwebtoken");
 const sendError = require("../utils/sendError");
 const { isValidObjectId } = require("mongoose");
@@ -32,15 +32,9 @@ exports.userInfoValidator = [
     .isLength({ min: 8, max: 20 })
     .withMessage(
       "Password should be at least 8 character and max 20 character long"
-    ),
-  check("role")
-    .trim()
-    .custom((value) => {
-      if (value === "" || USER_ROLES.includes(value)) return true;
-      throw new Error("Given role does not exist");
-    })
-    .withMessage(`roles must be one from ${USER_ROLES}`),
+    )
 ];
+
 
 exports.signInInfoValidator = [
   check("username")
@@ -67,7 +61,7 @@ exports.OnlySuperUser = (req, res, next) => {
 
 //This middleware checks for jwtToken in req.body and if it is
 //valid then user can be find in req.user in next middleware
-exports.userValidator = async (req, res, next) => {
+exports.authenticateUser = async (req, res, next) => {
   const jwtToken = req.headers.authorization?.split(" ")[1];
 
   if (!jwtToken) return sendError(res, "Unauthenticated user");
@@ -87,6 +81,8 @@ exports.userValidator = async (req, res, next) => {
   if (!isValidObjectId(userId)) return sendError(res, "Invalid token");
 
   const user = await User.findById(userId);
+
+  if (!user) return sendError(res, "Invalid token");
 
   req.user = user;
   next();
