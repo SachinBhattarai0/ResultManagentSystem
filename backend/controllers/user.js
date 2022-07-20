@@ -5,20 +5,20 @@ const School = require("../models/school");
 require("dotenv").config();
 
 exports.createUser = async (req, res) => {
-  const { username, password, school, role } = req.body;
+  const { username, password, schoolId, role } = req.body;
 
-  if (!school && role !== SUPERUSER)
+  if (!schoolId && role !== SUPERUSER)
     return sendError(res, "School must be present");
 
-  const schoolItem = await School.findOne({ name: school }).lean();
+  const school = await School.findOne({ _id: schoolId }).lean();
 
-  if (role !== SUPERUSER && !schoolItem)
+  if (role !== SUPERUSER && !school)
     return sendError(res, "School doesnot exist");
 
   const newUser = new User({
     username,
     password,
-    school: schoolItem?._id,
+    school: school?._id,
     role: role || DEFAULT_ROLE,
   });
 

@@ -6,7 +6,7 @@ const classSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "School",
     },
-    name: { type: String, trim: true, unique: true, required: true },
+    name: { type: String, trim: true,required: true },
   },
   { timestamps: true }
 );

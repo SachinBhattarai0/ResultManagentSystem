@@ -25,7 +25,7 @@ const markSchema = mongoose.Schema(
     marks: {
       type: [
         {
-          subject: mongoose.Schema.Types.ObjectId,
+          subject:String,
           theoryMark: Number,
           practicalMark: Number,
         },
