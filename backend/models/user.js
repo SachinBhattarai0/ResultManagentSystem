@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const TEACHER = "teacher";
-const STUDENT = "student";
 const SCHOOL_ADMIN = "schoolAdmin";
 const SUPERUSER = "superUser";
 
-const USER_ROLES = [TEACHER, STUDENT, SCHOOL_ADMIN, SUPERUSER];
-const DEFAULT_ROLE = "student";
+const USER_ROLES = [TEACHER, SCHOOL_ADMIN, SUPERUSER];
+const DEFAULT_ROLE = TEACHER;
 
 const userSchema = mongoose.Schema(
   {
@@ -22,6 +21,11 @@ const userSchema = mongoose.Schema(
       enum: USER_ROLES,
       default: DEFAULT_ROLE,
     },
+    active:{
+      type:String,
+      default:true,
+      required:true,
+    }
   },
   { timestamps: true }
 );
@@ -39,6 +43,5 @@ exports.User = mongoose.model("User", userSchema);
 exports.USER_ROLES = USER_ROLES;
 exports.DEFAULT_ROLE = DEFAULT_ROLE;
 exports.TEACHER = TEACHER;
-exports.STUDENT = STUDENT;
 exports.SCHOOL_ADMIN = SCHOOL_ADMIN;
 exports.SUPERUSER = SUPERUSER;

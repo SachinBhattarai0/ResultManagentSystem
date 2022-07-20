@@ -1,4 +1,4 @@
-const { create, getAll } = require("../controllers/assignment");
+const { create, getAll ,assignmentInfo} = require("../controllers/assignment");
 const {
   authenticateUser,
   OnlySuperUserOrSchoolAdmin,
@@ -7,5 +7,6 @@ const router = require("express").Router();
 
 router.post("/", authenticateUser, getAll);
 router.post("/create/", authenticateUser, OnlySuperUserOrSchoolAdmin, create);
+router.post('/:assignmentId/',authenticateUser,assignmentInfo)
 
 module.exports = router;

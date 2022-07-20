@@ -1,45 +1,38 @@
-const {
-  User,
-  DEFAULT_ROLE,
-  SUPERUSER,
-  TEACHER,
-  STUDENT,
-  SCHOOL_ADMIN,
-} = require("../models/user");
+const { User, TEACHER, SCHOOL_ADMIN } = require("../models/user");
 const sendError = require("../utils/sendError");
 const jwt = require("jsonwebtoken");
 const School = require("../models/school");
+const Student = require("../models/student");
+const Class = require("../models/class");
+const Subject = require("../models/subject");
+const { isValidObjectId } = require("mongoose");
 require("dotenv").config();
 
-exports.createUser = async (req, res) => {
-  const user = req.user
+exports.createTeacher = async (req, res) => {
+  const user = req.user;
+  let { username, password, schoolId } = req.body;
+  if (user.role === SCHOOL_ADMIN) schoolId = user.school.toString();
 
-  const { username, password, schoolId, role } = req.body;
+  const school = await School.findOne({ _id: schoolId }).lean();
 
-  if (role !== TEACHER && role !== STUDENT)
-    return sendError(res, "Invalid role provided");
+  if (!school && user.role !== SCHOOL_ADMIN)
+    return sendError(res, "Invalid school Id");
 
-  let school;
-  if (schoolId) school = await School.findOne({ _id: schoolId }).lean();
-
-  if (!school && user.role !== SCHOOL_ADMIN ) return sendError(res, "School doesnot exist");
-
-  const newUser = new User({
+  const newTeacher = new User({
     username,
     password,
-    school: user.school || school._id, 
-    role: role,
+    school: school._id,
   });
 
   try {
-    await newUser.save();
+    await newTeacher.save();
   } catch (error) {
     return sendError(res, error);
   }
 
   return res
     .status(201)
-    .json({ message: "User creted Successfully", userId: newUser._id });
+    .json({ message: "User creted Successfully", userId: newTeacher._id });
 };
 
 exports.createAdmin = async (req, res) => {
@@ -64,6 +57,41 @@ exports.createAdmin = async (req, res) => {
   return res.status(201).json("School admin created successfully");
 };
 
+exports.createStudent = async (req, res) => {
+  const user = req.user;
+  let { name, schoolId, classId, rollNo, subjects } = req.body;
+  if (user.role === SCHOOL_ADMIN) schoolId = user.school.toString();
+
+  const [school, _class] = await Promise.all([
+    School.findById(schoolId),
+    Class.findById(classId),
+  ]);
+
+  if (!school || !_class) return sendError(res, "Invalid school Id");
+  if (school._id.toString() !== _class.school.toString())
+    return sendError(res, "Bad request");
+
+  const subjects_arr = await subjects.map((subjectId) =>
+    isValidObjectId(subjectId)
+  );
+  if (subjects_arr.includes(false)) return sendError(res, "Invalid subject id");
+
+  const newStudent = new Student({
+    name,
+    school: school._id,
+    className: _class._id,
+    rollNo,
+    subjects: subjects,
+  });
+
+  try {
+    await newStudent.save();
+  } catch (error) {
+    return sendError(res, error);
+  }
+
+  return res.status(201).json("Student created successfully");
+};
 exports.signIn = async (req, res) => {
   const { username, password } = req.body;
 

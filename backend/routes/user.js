@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { createUser, createAdmin, signIn } = require("../controllers/user");
+const { createTeacher,createStudent, createAdmin, signIn } = require("../controllers/user");
 const {
   userInfoValidator,
   roleValidator,
@@ -22,13 +22,21 @@ router.post(
   validate,
   createAdmin
 );
-//For creating teacher or students
+//For creating teacher
 router.post(
-  "/create/",
+  "/teacher/create/",
   authenticateUser,
   OnlySuperUserOrSchoolAdmin,
   userInfoValidator,
-  createUser
+  createTeacher
+);
+// For creatng student
+router.post(
+  "/student/create/",
+  authenticateUser,
+  OnlySuperUserOrSchoolAdmin,
+  userInfoValidator,
+  createStudent
 );
 
 router.post("/sign-in/", signInInfoValidator, validate, signIn);

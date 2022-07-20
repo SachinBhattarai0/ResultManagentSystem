@@ -4,20 +4,26 @@ const assignmentSchema = mongoose.Schema(
   {
     school: {
       type: mongoose.Schema.Types.ObjectId,
-      res: "School",
+      ref: "School",
+      required: true,
+    },
+    exam: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Exam",
       required: true,
     },
     className: {
       type: mongoose.Schema.Types.ObjectId,
-      res: "Classe",
+      ref: "Class",
       required: true,
     },
     subject: {
       type: mongoose.Schema.Types.ObjectId,
-      res: "Subject",
+      ref: "Subject",
       required: true,
     },
-    to: { type: mongoose.Schema.Types.ObjectId, res: "User", required: true },
+    to: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    completed:{type:Boolean,required:true,default:false}
   },
   { timestamps: true }
 );
