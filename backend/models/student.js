@@ -16,6 +16,7 @@ const studentSchema = new mongoose.Schema({
   },
   rollNo: { type: Number, required: true },
   subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
+  active:{type:Boolean,default:true}
 });
 
 module.exports = mongoose.model("Student", studentSchema);
