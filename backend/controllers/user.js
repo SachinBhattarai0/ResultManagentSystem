@@ -1,10 +1,9 @@
-const { User, TEACHER, SCHOOL_ADMIN } = require("../models/user");
+const { User, SCHOOL_ADMIN, SUPERUSER } = require("../models/user");
 const sendError = require("../utils/sendError");
 const jwt = require("jsonwebtoken");
 const School = require("../models/school");
 const Student = require("../models/student");
 const Class = require("../models/class");
-const Subject = require("../models/subject");
 const { isValidObjectId } = require("mongoose");
 require("dotenv").config();
 
@@ -104,4 +103,34 @@ exports.signIn = async (req, res) => {
   const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
   return res.json({ jwtToken });
+};
+
+exports.verifyUser = async (req, res) => {
+  const { jwtToken } = req.body;
+  if (!jwtToken) return sendError(res, "Token is required");
+
+  const decoded = jwt.decode(jwtToken);
+  if (!decoded) return sendError(res, "Token is invalid", 401);
+
+  if (!decoded) return sendError(res, "Invalid token", 401);
+
+  const user = await User.findById(decoded.userId)
+    .select("username role school")
+    .lean();
+  if (!user) return sendError(res, "Invalid token", 401);
+
+  return res.json(user);
+};
+
+// Make more secure later
+console.log("make secure");
+exports.createSuperuser = async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password)
+    return sendError(res, "username or password is missing");
+
+  const newSuperuser = new User({ username, password, role: SUPERUSER });
+
+  const user = await newSuperuser.save();
+  return res.json(user);
 };

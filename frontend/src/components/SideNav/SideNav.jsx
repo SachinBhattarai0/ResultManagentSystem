@@ -4,7 +4,6 @@ import { MdAssignment, MdAssignmentTurnedIn } from "react-icons/md";
 import { useNavInfo } from "../../context/NavInfoProvider";
 import { CgDetailsMore } from "react-icons/cg";
 import { BiLogOut } from "react-icons/bi";
-import { NavLink } from "react-router-dom";
 import NavLinkEl from "./NavLinkEl";
 
 const NavBar = () => {

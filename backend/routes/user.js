@@ -1,8 +1,14 @@
 const router = require("express").Router();
-const { createTeacher,createStudent, createAdmin, signIn } = require("../controllers/user");
+const {
+  createTeacher,
+  createStudent,
+  createAdmin,
+  signIn,
+  verifyUser,
+  createSuperuser,
+} = require("../controllers/user");
 const {
   userInfoValidator,
-  roleValidator,
   validate,
   signInInfoValidator,
   OnlySuperUser,
@@ -11,7 +17,9 @@ const {
 } = require("../middlewares/validator");
 
 //create superuser
-// router.post('superuser/create',createsuperuser)
+router.post("/superuser/create/", userInfoValidator, createSuperuser);
+
+router.post("/verify/", verifyUser);
 
 //For creating admin
 router.post(
