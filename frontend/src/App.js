@@ -1,8 +1,9 @@
+import React from "react";
 import SignIn from "./pages/SignIn";
 
 function App() {
   return (
-    <div className="font-openSans">
+    <div>
       <SignIn />
     </div>
   );

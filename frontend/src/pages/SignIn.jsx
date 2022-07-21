@@ -1,8 +1,8 @@
 import React from "react";
-import Input from "../container/form/Input";
-import Button from "../container/form/Button";
-import Form from "../container/form/Form";
-import FormTitle from "../container/form/FormTitle";
+import Input from "../components/form/Input";
+import Button from "../components/form/Button";
+import Form from "../components/form/Form";
+import FormTitle from "../components/form/FormTitle";
 
 const SignIn = () => {
   return (
