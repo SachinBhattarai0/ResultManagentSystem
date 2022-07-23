@@ -19,13 +19,13 @@ const markSchema = mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Student",
       required: true,
     },
     marks: {
       type: [
         {
-          subject:String,
+          subject: String,
           theoryMark: Number,
           practicalMark: Number,
         },

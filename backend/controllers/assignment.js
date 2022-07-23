@@ -111,7 +111,9 @@ exports.assignmentInfo = async (req, res) => {
       subjects: assignment.subject._id,
     },
     "name rollNo"
-  ).lean();
+  )
+    .sort("rollNo")
+    .lean();
 
   const assignmentInfo = {
     subject: assignment.subject.name,

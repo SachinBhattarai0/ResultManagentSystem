@@ -8,7 +8,6 @@ const examRoutes = require("./routes/exam");
 const cors = require("cors");
 require("dotenv").config();
 require("./db");
-console.log("test assignmentMark ROute");
 
 const app = express();
 app.use(express.json());
