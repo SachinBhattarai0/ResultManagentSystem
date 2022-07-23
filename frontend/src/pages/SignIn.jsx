@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../components/form/Input";
 import Button from "../components/form/Button";
 import Form from "../components/form/Form";
@@ -8,20 +8,44 @@ import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { userState } = useUserInfo();
+  const { userState: user, handleLogin } = useUserInfo();
+  const [userInfoState, setUserInfoState] = useState({
+    username: "",
+    password: "",
+  });
+  const { username, password } = userInfoState;
+
+  const changeHander = ({ target }) => {
+    setUserInfoState({ ...userInfoState, [target.name]: target.value });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    handleLogin(username, password);
+  };
 
   useEffect(() => {
-    console.log(userState);
-    if (userState.isLoggedIn)
-      return navigate("/assignments/", { replace: true });
-  }, [userState]);
+    if (user.isLoggedIn) return navigate("/assignments/", { replace: true });
+  }, [user]);
 
   return (
     <div className="w-screen h-screen flex justify-center items-center">
-      <Form>
+      <Form onSubmit={submitHandler}>
         <FormTitle>RMS LOGIN</FormTitle>
-        <Input name="username" label="Username" />
-        <Input name="password" label="Password" type="password" />
+        <Input
+          name="username"
+          label="Username"
+          value={username}
+          onChange={changeHander}
+          autoFocus
+        />
+        <Input
+          name="password"
+          label="Password"
+          type="password"
+          value={password}
+          onChange={changeHander}
+        />
 
         <Button full>SignIn</Button>
       </Form>

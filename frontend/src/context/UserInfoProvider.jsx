@@ -1,5 +1,6 @@
 import React, { useState, useContext, createContext, useEffect } from "react";
-import { postRequest } from "../utils/api";
+import { Navigate } from "react-router-dom";
+import { postRequest } from "../utils/postRequest";
 
 const UserInfoContext = createContext();
 const DEFAULT_STATE = {
@@ -11,8 +12,31 @@ const DEFAULT_STATE = {
 const UserInfoProvider = ({ children }) => {
   const [userState, setUserState] = useState(DEFAULT_STATE);
 
-  const handleLogin = () => {};
-  const handleLogout = () => {};
+  const handleLogin = async (username, password) => {
+    if (!username || !password) return;
+
+    setUserState({ ...userState, isPending: true });
+    let res = await postRequest("user/sign-in/", { username, password });
+    res = await res.json();
+
+    if (res.error) return console.error(res.error);
+    localStorage.setItem("jwtToken", res.jwtToken);
+
+    setUserState({
+      ...userState,
+      username: res.username,
+      id: res.userId,
+      isLoggedIn: true,
+      role: res.role,
+    });
+    <Navigate to="/assignments/" replace />;
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("jwtToken");
+    <Navigate to="/auth/signIn/" replace />;
+    setUserState(DEFAULT_STATE);
+  };
 
   useEffect(() => {
     const isAuth = async () => {
@@ -24,14 +48,14 @@ const UserInfoProvider = ({ children }) => {
       if (res.status !== 200) return localStorage.removeItem("jwtToken");
 
       res = await res.json();
-      return setUserState({
+      setUserState({
         ...userState,
         id: res._id,
-        username: res.username,
         isPending: false,
         role: res.role,
         isLoggedIn: true,
       });
+      <Navigate to="/assignments/" replace />;
     };
 
     isAuth();

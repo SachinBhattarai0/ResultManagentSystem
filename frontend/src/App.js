@@ -14,15 +14,13 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={
-            <Protected allowedRoles={[TEACHER]} _element={<SideNav />} />
-          }
+          element={<Protected allowedRoles={[TEACHER]} el={<SideNav />} />}
         >
           <Route path="assignments/" element={<Assignments />} />
           <Route path="assignments/:id/" element={<AssignmentMarks />} />
         </Route>
 
-        {/* <Route path="/admin" /> */}
+        {/* <Route path="/admin" */}
         <Route path="auth/signIn/" element={<SignIn />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

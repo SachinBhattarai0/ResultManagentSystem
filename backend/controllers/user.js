@@ -102,7 +102,7 @@ exports.signIn = async (req, res) => {
 
   const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-  return res.json({ jwtToken });
+  return res.json({ jwtToken, username, userId: user._id, role: user.role });
 };
 
 exports.verifyUser = async (req, res) => {
