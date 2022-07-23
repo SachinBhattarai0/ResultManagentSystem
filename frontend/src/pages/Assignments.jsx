@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NavBarContainer from "../components/NavBarContainer/NavBarContainer";
+import { useUserInfo } from "../context/UserInfoProvider";
 import Button from "../components/form/Button";
 import { Link } from "react-router-dom";
 
 const Assignments = () => {
+  const { userState } = useUserInfo();
+
+  useEffect(() => {
+    //fetch user assignments
+  });
+
   return (
     <NavBarContainer>
       <div className="px-3 py-5 bg-gray-100 flex-1 flex items-start justify-center">

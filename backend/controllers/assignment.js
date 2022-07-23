@@ -11,10 +11,10 @@ const { isValidObjectId } = require("mongoose");
 
 exports.getAll = async (req, res) => {
   const loggedInUser = req.user;
-  const { assignmentOf } = req.body;
+  const { userId } = req.body;
 
-  if (!isValidObjectId(assignmentOf)) return sendError(res, "Invalid id");
-  const user = await User.findById(assignmentOf);
+  if (!isValidObjectId(userId)) return sendError(res, "Invalid id");
+  const user = await User.findById(userId);
 
   if (
     loggedInUser.role !== SCHOOL_ADMIN &&
@@ -92,17 +92,23 @@ exports.assignmentInfo = async (req, res) => {
   )
     return sendError(res, "user not allowed for the action", 401);
 
-  if (loggedInUser.role === SCHOOL_ADMIN && loggedInUser.school !== user.school)
+  if (
+    loggedInUser.role === SCHOOL_ADMIN &&
+    loggedInUser.school !== assignment.school
+  )
     return sendError(res, "user not allowed for the action!", 401);
 
   if (!assignment)
     return sendError(res, "Assignment not found with given params");
 
-  const studentList = await Student.find({
-    active: true,
-    className: assignment.className._id,
-    subjects: assignment.subject._id,
-  },"name rollNo").lean();
+  const studentList = await Student.find(
+    {
+      active: true,
+      className: assignment.className._id,
+      subjects: assignment.subject._id,
+    },
+    "name rollNo"
+  ).lean();
 
   const assignmentInfo = {
     subject: assignment.subject.name,

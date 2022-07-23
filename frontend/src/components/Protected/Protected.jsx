@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { SCHOOL_ADMIN, SUPERUSER } from "../../constants/userConstants";
 import { useUserInfo } from "../../context/UserInfoProvider";
 
-const Protected = ({ allowedRoles, _element }) => {
+const Protected = ({ allowedRoles, el }) => {
   const { userState: user } = useUserInfo();
 
   if (!user.isLoggedIn) return <Navigate to="/auth/signIn/" />;
@@ -11,7 +11,7 @@ const Protected = ({ allowedRoles, _element }) => {
   if (!allowedRoles.includes(user.role))
     return <Navigate replace to="/not-found/" />;
 
-  return _element;
+  return el;
 };
 
 export default Protected;

@@ -1,6 +1,8 @@
 import React, { useState, useContext, createContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { SUCCESS } from "../constants/messgeConstants";
 import { postRequest } from "../utils/postRequest";
+import { useAlert } from "./AlertContext";
 
 const UserInfoContext = createContext();
 const DEFAULT_STATE = {
@@ -10,6 +12,7 @@ const DEFAULT_STATE = {
   isLoggedIn: false,
 };
 const UserInfoProvider = ({ children }) => {
+  const { updateAlert } = useAlert();
   const [userState, setUserState] = useState(DEFAULT_STATE);
 
   const handleLogin = async (username, password) => {
@@ -19,7 +22,7 @@ const UserInfoProvider = ({ children }) => {
     let res = await postRequest("user/sign-in/", { username, password });
     res = await res.json();
 
-    if (res.error) return console.error(res.error);
+    if (res.error) return updateAlert(res.error);
     localStorage.setItem("jwtToken", res.jwtToken);
 
     setUserState({
@@ -28,13 +31,18 @@ const UserInfoProvider = ({ children }) => {
       id: res.userId,
       isLoggedIn: true,
       role: res.role,
+      isPending: false,
     });
+
+    updateAlert("LogIn successful!", SUCCESS);
     <Navigate to="/assignments/" replace />;
   };
 
   const handleLogout = () => {
     localStorage.removeItem("jwtToken");
     <Navigate to="/auth/signIn/" replace />;
+
+    updateAlert("LogOut successful!", SUCCESS);
     setUserState(DEFAULT_STATE);
   };
 
@@ -55,6 +63,7 @@ const UserInfoProvider = ({ children }) => {
         role: res.role,
         isLoggedIn: true,
       });
+      updateAlert("LogIn successful!", SUCCESS);
       <Navigate to="/assignments/" replace />;
     };
 

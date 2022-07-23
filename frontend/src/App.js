@@ -7,10 +7,13 @@ import NotFound from "./pages/NotFound";
 import { TEACHER } from "./constants/userConstants";
 import Protected from "./components/Protected/Protected";
 import { Routes, Route } from "react-router-dom";
+import Alert from "./components/Alert/Alert";
 
 function App() {
   return (
     <div className="flex">
+      <Alert />
+
       <Routes>
         <Route
           path="/"

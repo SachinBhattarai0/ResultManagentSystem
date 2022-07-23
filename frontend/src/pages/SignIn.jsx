@@ -5,6 +5,7 @@ import Form from "../components/form/Form";
 import FormTitle from "../components/form/FormTitle";
 import { useUserInfo } from "../context/UserInfoProvider";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner/Spinner";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -47,7 +48,9 @@ const SignIn = () => {
           onChange={changeHander}
         />
 
-        <Button full>SignIn</Button>
+        <Button style={{ pointerEvents: user.isPending ? "none" : "all" }} full>
+          {user.isPending ? <Spinner /> : "SignIn"}
+        </Button>
       </Form>
     </div>
   );
