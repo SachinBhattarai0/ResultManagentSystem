@@ -6,11 +6,10 @@ const DEFAULT_STATE = {
   id: null,
   username: null,
   isPending: false,
-  isAuthenticated: false,
+  isLoggedIn: false,
 };
 const UserInfoProvider = ({ children }) => {
   const [userState, setUserState] = useState(DEFAULT_STATE);
-  console.log(userState);
 
   const handleLogin = () => {};
   const handleLogout = () => {};
@@ -31,7 +30,7 @@ const UserInfoProvider = ({ children }) => {
         username: res.username,
         isPending: false,
         role: res.role,
-        isAuthenticated: true,
+        isLoggedIn: true,
       });
     };
 

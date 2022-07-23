@@ -1,5 +1,4 @@
 import React from "react";
-import Input from "../components/form/Input";
 import NavBarContainer from "../components/NavBarContainer/NavBarContainer";
 
 const AssignmentMarks = () => {
@@ -36,15 +35,15 @@ const AssignmentMarks = () => {
                 Suban Choudhary
               </td>
               <td className="p-2 border border-slate-300 text-center">
-                <Input
+                <input
                   type="number"
-                  extraClass="w-20 m-auto p-1 rounded-none"
+                  className="w-20 outline-none border border-gray-200 p-1 focus:border-bluish rounded"
                 />
               </td>
               <td className="p-2 border border-slate-300 text-center">
-                <Input
+                <input
                   type="number"
-                  extraClass="w-20 m-auto p-1 rounded-none"
+                  className="w-20 outline-none border border-gray-200 p-1 focus:border-bluish rounded"
                 />
               </td>
             </tr>

@@ -21,11 +21,11 @@ const userSchema = mongoose.Schema(
       enum: USER_ROLES,
       default: DEFAULT_ROLE,
     },
-    active:{
-      type:String,
-      default:true,
-      required:true,
-    }
+    active: {
+      type: String,
+      default: true,
+      required: true,
+    },
   },
   { timestamps: true }
 );

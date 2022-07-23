@@ -3,18 +3,28 @@ import SideNav from "./components/SideNav/SideNav";
 import SignIn from "./pages/SignIn";
 import Assignments from "./pages/Assignments.jsx";
 import AssignmentMarks from "./pages/AssignmentMarks";
+import NotFound from "./pages/NotFound";
+import { TEACHER } from "./constants/userConstants";
+import Protected from "./components/Protected/Protected";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <div className="flex">
       <Routes>
-        <Route path="auth/signIn/" element={<SignIn />} />
-
-        <Route path="/" element={<SideNav />}>
+        <Route
+          path="/"
+          element={
+            <Protected allowedRoles={[TEACHER]} _element={<SideNav />} />
+          }
+        >
           <Route path="assignments/" element={<Assignments />} />
           <Route path="assignments/:id/" element={<AssignmentMarks />} />
         </Route>
+
+        {/* <Route path="/admin" /> */}
+        <Route path="auth/signIn/" element={<SignIn />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
