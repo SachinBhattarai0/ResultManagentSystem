@@ -32,9 +32,8 @@ exports.userInfoValidator = [
     .isLength({ min: 8, max: 20 })
     .withMessage(
       "Password should be at least 8 character and max 20 character long"
-    )
+    ),
 ];
-
 
 exports.signInInfoValidator = [
   check("username")

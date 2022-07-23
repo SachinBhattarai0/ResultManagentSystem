@@ -14,6 +14,7 @@ const subjectSchema = mongoose.Schema(
     },
     theoryMark: { type: Number, default: 75, required: true },
     practicalMark: { type: Number, default: 25, required: true },
+    passMark: { type: Number, default: 40, required: true },
   },
   { timestamps: true }
 );

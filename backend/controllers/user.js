@@ -89,7 +89,12 @@ exports.createStudent = async (req, res) => {
     return sendError(res, error);
   }
 
-  return res.status(201).json("Student created successfully");
+  return res
+    .status(201)
+    .json({
+      message: "Student created successfully",
+      studentId: newStudent._id,
+    });
 };
 exports.signIn = async (req, res) => {
   const { username, password } = req.body;

@@ -3,7 +3,7 @@ const School = require("../models/school");
 const { isValidObjectId } = require("mongoose");
 
 exports.create = async (req, res) => {
-  const { schoolId, name, fullMark, passMark } = req.body;
+  const { schoolId, name, theoryMark, practicalMark, passMark } = req.body;
 
   if (!isValidObjectId(schoolId)) return sendError(res, "Invalid schoolId");
 
@@ -13,7 +13,8 @@ exports.create = async (req, res) => {
   const newSubject = new Subject({
     school: school._id,
     name,
-    fullMark,
+    theoryMark,
+    practicalMark,
     passMark,
   });
 

@@ -1,54 +1,99 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import NavBarContainer from "../components/NavBarContainer/NavBarContainer";
+import Table from "../components/Table/Table";
+import Tr from "../components/Table/Tr";
+import Th from "../components/Table/Th";
+import Td from "../components/Table/Td";
+import { getAssignmentInfo } from "../utils/api";
+
+const DEFAULT_STATE = {
+  _class: "",
+  exam: "",
+  subject: "",
+  practicalMark: "",
+  theoryMark: "",
+  studentList: "",
+};
 
 const AssignmentMarks = () => {
+  const { assignmentId } = useParams();
+  const [assignmentInfo, setAssignmentInfo] = useState(DEFAULT_STATE);
+  const { _class, exam, subject, practicalMark, theoryMark, studentList } =
+    assignmentInfo;
+
+  useEffect(() => {
+    const fetchAssignmentInfo = async () => {
+      const res = await getAssignmentInfo(assignmentId);
+      const {
+        class: _class,
+        exam,
+        subject,
+        practicalMark,
+        theoryMark,
+        studentList,
+      } = res;
+
+      setAssignmentInfo({
+        _class,
+        exam: `${exam.year}-${exam.month}-${exam.year}`,
+        subject,
+        practicalMark,
+        theoryMark,
+        studentList,
+      });
+    };
+
+    fetchAssignmentInfo();
+  }, []);
+
   return (
     <NavBarContainer>
-      <div className="px-3 py-5 flex-1 flex items-start justify-center">
-        <table border={"1"} className="flex-1 bg-white rounded-md">
-          <tbody>
-            <tr>
-              <th
-                rowSpan={2}
-                className="p-2 border border-b-2 border-slate-300"
-              >
-                RollNo
-              </th>
-              <th
-                rowSpan={2}
-                className="p-2 border border-b-2 border-slate-300"
-              >
-                Name
-              </th>
-              <th className="p-2 border border-slate-300" colSpan={2}>
-                Marks
-              </th>
-            </tr>
-            <tr>
-              <th className="p-2 border border-b-2 border-slate-300">Th</th>
-              <th className="p-2 border border-b-2 border-slate-300">Pr</th>
-            </tr>
+      <div className="px-3 py-5 flex-1 flex flex-col items-start justify-center">
+        <div className="flex justify-between w-full">
+          <span>
+            <b>Exam: </b>
+            {exam}
+          </span>
+          <span>
+            <b>Class: </b>
+            {_class}
+          </span>
+          <span>
+            <b>Subject: </b>
+            {subject}
+          </span>
+        </div>
+        <Table>
+          <Tr>
+            <Th rowSpan={2}>RollNo</Th>
+            <Th rowSpan={2}>Name</Th>
+            <Th colSpan={2}>Marks</Th>
+          </Tr>
+          <Tr>
+            <Th>Th</Th>
+            <Th>Pr</Th>
+          </Tr>
 
-            <tr>
-              <td className="p-2 border border-slate-300 text-center">1</td>
-              <td className="p-2 border border-slate-300 text-center">
-                Suban Choudhary
-              </td>
-              <td className="p-2 border border-slate-300 text-center">
+          {studentList.map((student, i) => {
+            <Tr>
+              <Td>{i.name}</Td>
+              <Td>{student.name}</Td>
+              <Td>
                 <input
                   type="number"
                   className="w-20 outline-none border border-gray-200 p-1 focus:border-bluish rounded"
                 />
-              </td>
-              <td className="p-2 border border-slate-300 text-center">
+              </Td>
+              <Td>
                 <input
                   type="number"
                   className="w-20 outline-none border border-gray-200 p-1 focus:border-bluish rounded"
                 />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </Td>
+            </Tr>;
+          })}
+        </Table>
       </div>
     </NavBarContainer>
   );

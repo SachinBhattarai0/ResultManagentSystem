@@ -19,14 +19,18 @@ exports.getAll = async (req, res) => {
   if (
     loggedInUser.role !== SCHOOL_ADMIN &&
     loggedInUser.role !== SUPERUSER &&
-    loggedInUser._id !== user._id
+    loggedInUser._id.toString() !== user._id.toString()
   )
     return sendError(res, "user not allowed for the action", 401);
 
   if (loggedInUser.role === SCHOOL_ADMIN && loggedInUser.school !== user.school)
     return sendError(res, "user not allowed for the action!", 401);
 
-  const assignments = await Assignment.find({ to: user._id }).lean();
+  const assignments = await Assignment.find({ to: user._id, completed: false })
+    .populate({ path: "subject", select: "name" })
+    .populate({ path: "className", select: "name" })
+    .populate({ path: "exam", select: "year month date" })
+    .lean();
 
   return res.json({ assignments });
 };
@@ -82,13 +86,12 @@ exports.assignmentInfo = async (req, res) => {
     .populate({ path: "subject", select: "name theoryMark practicalMark" })
     .populate({ path: "className", select: "name" })
     .populate({ path: "exam", select: "year month date" })
-    .populate({ path: "to", select: "username" })
     .lean();
 
   if (
     loggedInUser.role !== SCHOOL_ADMIN &&
     loggedInUser.role !== SUPERUSER &&
-    loggedInUser._id !== assignment.to
+    loggedInUser._id.toString() !== assignment.to._id.toString()
   )
     return sendError(res, "user not allowed for the action", 401);
 

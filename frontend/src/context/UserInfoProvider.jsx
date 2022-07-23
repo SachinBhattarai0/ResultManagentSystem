@@ -22,7 +22,10 @@ const UserInfoProvider = ({ children }) => {
     let res = await postRequest("user/sign-in/", { username, password });
     res = await res.json();
 
-    if (res.error) return updateAlert(res.error);
+    if (res.error) {
+      setUserState({ ...userState, isPending: false });
+      return updateAlert(res.error);
+    }
     localStorage.setItem("jwtToken", res.jwtToken);
 
     setUserState({

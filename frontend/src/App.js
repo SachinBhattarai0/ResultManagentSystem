@@ -20,7 +20,10 @@ function App() {
           element={<Protected allowedRoles={[TEACHER]} el={<SideNav />} />}
         >
           <Route path="assignments/" element={<Assignments />} />
-          <Route path="assignments/:id/" element={<AssignmentMarks />} />
+          <Route
+            path="assignments/:assignmentId/"
+            element={<AssignmentMarks />}
+          />
         </Route>
 
         {/* <Route path="/admin" */}
