@@ -32,6 +32,22 @@ export const getAssignmentInfo = async (assignmentId) => {
   return res;
 };
 
+export const createMarks = async (assignmentId, marksInfo) => {
+  const jwtToken = getJwtToken();
+
+  if (!assignmentId || !marksInfo || !jwtToken) return;
+
+  let res = await postRequest(
+    "marks/create/",
+    { assignmentId, marksInfo },
+    { Authorization: "Bearer " + jwtToken }
+  );
+  if (res.status !== 200) return handleError();
+  res = await res.json();
+
+  return res;
+};
+
 const getJwtToken = () => localStorage.getItem("jwtToken");
 const removeJwtToken = () => localStorage.removeItem("jwtToken");
 const handleError = () => {

@@ -1,5 +1,5 @@
 const { check, validationResult } = require("express-validator");
-const { User, SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
+const { User, SUPERUSER, SCHOOL_ADMIN, TEACHER } = require("../models/user");
 const jwt = require("jsonwebtoken");
 const sendError = require("../utils/sendError");
 const { isValidObjectId } = require("mongoose");
@@ -54,6 +54,13 @@ exports.OnlySuperUserOrSchoolAdmin = (req, res, next) => {
 exports.OnlySuperUser = (req, res, next) => {
   const user = req.user;
   if (user.role !== SUPERUSER)
+    return sendError(res, "User does not have permission for the action", 401);
+  next();
+};
+
+exports.OnlyTeacher = (req, res, next) => {
+  const user = req.user;
+  if (user.role !== TEACHER)
     return sendError(res, "User does not have permission for the action", 401);
   next();
 };

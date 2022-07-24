@@ -22,23 +22,23 @@ const markSchema = mongoose.Schema(
       ref: "Student",
       required: true,
     },
-    marks: {
-      type: [
-        {
-          subject: String,
-          theoryMark: Number,
-          practicalMark: Number,
-        },
-      ],
-    },
+    marks: [
+      {
+        type: Object,
+        subject: String,
+        theoryMark: Number,
+        practicalMark: Number,
+      },
+    ],
     // subject: {
     //   type: mongoose.Schema.Types.ObjectId,
     //   ref: "Subject",
     //   required: true,
     // },
     // mark: {
-    //   type: { theoryMark: Number, practicalMark: Number },
-    //   required: true,
+    //   type: Object,
+    //   theoryMark: number,
+    //   practicalMark: number,
     // },
   },
   { timestamps: true }

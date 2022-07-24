@@ -115,15 +115,7 @@ exports.assignmentInfo = async (req, res) => {
     .sort("rollNo")
     .lean();
 
-  const assignmentInfo = {
-    subject: assignment.subject.name,
-    class: assignment.className.name,
-    exam: assignment.exam,
-    assignedTo: assignment.to,
-    theoryMark: assignment.subject.theoryMark,
-    practicalMark: assignment.subject.practicalMark,
-    studentList,
-  };
+  const assignmentInfo = { assignment, studentList };
 
   return res.json(assignmentInfo);
 };
