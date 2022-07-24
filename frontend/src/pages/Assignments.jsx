@@ -49,7 +49,7 @@ const Assignments = () => {
               <Td>{assignment.className.name}</Td>
               <Td>{assignment.subject.name}</Td>
               <Td>
-                <Link to={`/assignments/${assignment._id}/`}>
+                <Link to={`/assignments/${assignment._id}/`} state={assignment}>
                   <Button sm>View</Button>
                 </Link>
               </Td>

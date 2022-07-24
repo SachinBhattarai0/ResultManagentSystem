@@ -8,6 +8,7 @@ import { TEACHER } from "./constants/userConstants";
 import Protected from "./components/Protected/Protected";
 import { Routes, Route } from "react-router-dom";
 import Alert from "./components/Alert/Alert";
+import CompletedAssignment from "./pages/CompletedAssignment";
 
 function App() {
   return (
@@ -19,11 +20,15 @@ function App() {
           path="/"
           element={<Protected allowedRoles={[TEACHER]} el={<SideNav />} />}
         >
-          <Route path="assignments/" element={<Assignments />} />
+          <Route
+            path="assignment/completed/"
+            element={<CompletedAssignment />}
+          />
           <Route
             path="assignments/:assignmentId/"
             element={<AssignmentMarks />}
           />
+          <Route path="assignments/" element={<Assignments />} />
         </Route>
 
         {/* <Route path="/admin" */}

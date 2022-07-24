@@ -17,16 +17,32 @@ export const getAssignments = async (userId) => {
   return res.assignments;
 };
 
-export const getAssignmentInfo = async (assignmentId) => {
+export const getCompletedAssignments = async (userId) => {
+  const jwtToken = getJwtToken();
+  if (!userId || !jwtToken) return;
+
+  let res = await postRequest(
+    "assignment/completed/",
+    { userId },
+    { Authorization: "Bearer " + jwtToken }
+  );
+
+  if (res.status !== 200) return handleError();
+
+  res = await res.json();
+  return res.assignments;
+};
+
+export const getStudentList = async (assignmentId) => {
   const jwtToken = getJwtToken();
   if (!assignmentId || !jwtToken) return;
 
   let res = await postRequest(
-    `assignment/${assignmentId}/`,
-    {},
+    `assignment/student-list/`,
+    { assignmentId },
     { Authorization: "Bearer " + jwtToken }
   );
-  if (res.status !== 200) return handleError();
+  // if (res.status !== 200) return handleError();
   res = await res.json();
 
   return res;

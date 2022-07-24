@@ -89,12 +89,10 @@ exports.createStudent = async (req, res) => {
     return sendError(res, error);
   }
 
-  return res
-    .status(201)
-    .json({
-      message: "Student created successfully",
-      studentId: newStudent._id,
-    });
+  return res.status(201).json({
+    message: "Student created successfully",
+    studentId: newStudent._id,
+  });
 };
 exports.signIn = async (req, res) => {
   const { username, password } = req.body;
@@ -127,12 +125,13 @@ exports.verifyUser = async (req, res) => {
   return res.json(user);
 };
 
-// Make more secure later
-console.log("make secure");
 exports.createSuperuser = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, secretKey } = req.body;
   if (!username || !password)
     return sendError(res, "username or password is missing");
+
+  if (secretKey !== process.env.SYSTEM_SECRET)
+    return sendError(res, "username or password is missing", 401);
 
   const newSuperuser = new User({ username, password, role: SUPERUSER });
 

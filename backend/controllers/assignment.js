@@ -4,29 +4,26 @@ const ClassName = require("../models/class");
 const Subject = require("../models/subject");
 const Student = require("../models/student");
 const Exam = require("../models/exam");
-const { User, SUPERUSER, SCHOOL_ADMIN, STUDENT } = require("../models/user");
+const { User } = require("../models/user");
 const { TEACHER } = require("../models/user");
 const sendError = require("../utils/sendError");
-const { isValidObjectId } = require("mongoose");
 
 exports.getAll = async (req, res) => {
-  const loggedInUser = req.user;
-  const { userId } = req.body;
-
-  if (!isValidObjectId(userId)) return sendError(res, "Invalid id");
-  const user = await User.findById(userId);
-
-  if (
-    loggedInUser.role !== SCHOOL_ADMIN &&
-    loggedInUser.role !== SUPERUSER &&
-    loggedInUser._id.toString() !== user._id.toString()
-  )
-    return sendError(res, "user not allowed for the action", 401);
-
-  if (loggedInUser.role === SCHOOL_ADMIN && loggedInUser.school !== user.school)
-    return sendError(res, "user not allowed for the action!", 401);
+  const user = req.user;
 
   const assignments = await Assignment.find({ to: user._id, completed: false })
+    .populate({ path: "subject", select: "name theoryMark practicalMark" })
+    .populate({ path: "className", select: "name" })
+    .populate({ path: "exam", select: "year month date" })
+    .lean();
+
+  return res.json({ assignments });
+};
+
+exports.getCompleted = async (req, res) => {
+  const user = req.user;
+
+  const assignments = await Assignment.find({ to: user._id, completed: true })
     .populate({ path: "subject", select: "name" })
     .populate({ path: "className", select: "name" })
     .populate({ path: "exam", select: "year month date" })
@@ -75,47 +72,26 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.assignmentInfo = async (req, res) => {
-  const { assignmentId } = req.params;
+exports.studentList = async (req, res) => {
+  const { assignmentId } = req.body;
   const loggedInUser = req.user;
 
-  if (!isValidObjectId(assignmentId))
-    return sendError(res, "Invalid assignment id");
+  const assignment = await Assignment.findById(assignmentId).lean();
+  if (!assignment) return sendError(res, "Invalid assignment id");
 
-  const assignment = await Assignment.findById(assignmentId)
-    .populate({ path: "subject", select: "name theoryMark practicalMark" })
-    .populate({ path: "className", select: "name" })
-    .populate({ path: "exam", select: "year month date" })
-    .lean();
-
-  if (
-    loggedInUser.role !== SCHOOL_ADMIN &&
-    loggedInUser.role !== SUPERUSER &&
-    loggedInUser._id.toString() !== assignment.to._id.toString()
-  )
-    return sendError(res, "user not allowed for the action", 401);
-
-  if (
-    loggedInUser.role === SCHOOL_ADMIN &&
-    loggedInUser.school !== assignment.school
-  )
-    return sendError(res, "user not allowed for the action!", 401);
-
-  if (!assignment)
-    return sendError(res, "Assignment not found with given params");
+  if (loggedInUser._id.toString() !== assignment.to.toString())
+    return sendError(res, "User not allowed for action", 401);
 
   const studentList = await Student.find(
     {
       active: true,
-      className: assignment.className._id,
-      subjects: assignment.subject._id,
+      className: assignment.className,
+      subjects: assignment.subject,
     },
     "name rollNo"
   )
     .sort("rollNo")
     .lean();
 
-  const assignmentInfo = { assignment, studentList };
-
-  return res.json(assignmentInfo);
+  return res.json({ studentList });
 };

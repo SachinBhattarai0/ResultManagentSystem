@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Navigate, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAlert } from "../context/AlertContext";
 import NavBarContainer from "../components/NavBarContainer/NavBarContainer";
 import Button from "../components/form/Button";
@@ -7,7 +7,7 @@ import Table from "../components/Table/Table";
 import Tr from "../components/Table/Tr";
 import Th from "../components/Table/Th";
 import Td from "../components/Table/Td";
-import { getAssignmentInfo } from "../utils/api";
+import { getStudentList } from "../utils/api";
 import { createMarks } from "../utils/api";
 import Spinner from "../components/Spinner/Spinner";
 import { SUCCESS } from "../constants/messgeConstants";
@@ -20,10 +20,12 @@ const DEFAULT_STATE = {
 
 const AssignmentMarks = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const { assignmentId } = useParams();
   const { updateAlert } = useAlert();
   const focusedTheoryInputRef = useRef();
   const focusedPracticalInputRef = useRef();
+  const [formSubmitting, setFormSubmitting] = useState(false);
   const [theoryMarks, setTheoryMarks] = useState({});
   const [practicalMarks, setPracticalMarks] = useState({});
   const [focusedTheoryInputIndex, setfocusedTheoryInputIndex] = useState();
@@ -69,7 +71,9 @@ const AssignmentMarks = () => {
       };
     });
 
+    setFormSubmitting(true);
     const res = await createMarks(assignmentId, marksArr);
+
     updateAlert(res.message, SUCCESS);
     navigate("/assignments/", { replace: true });
   };
@@ -110,14 +114,14 @@ const AssignmentMarks = () => {
   }, [focusedTheoryInputIndex, focusedPracticalInputIndex]);
 
   useEffect(() => {
-    const fetchAssignmentInfo = async () => {
+    const fetchStudentList = async () => {
       setAssignmentInfo({ ...assignmentInfo, isPending: true });
-      const res = await getAssignmentInfo(assignmentId);
+      const { studentList } = await getStudentList(assignmentId);
 
-      setAssignmentInfo({ ...res, isPending: false });
+      setAssignmentInfo({ assignment: state, isPending: false, studentList });
     };
 
-    fetchAssignmentInfo();
+    fetchStudentList();
   }, []);
 
   return (
@@ -181,8 +185,12 @@ const AssignmentMarks = () => {
           ))}
         </Table>
         {assignmentInfo.isPending && <Spinner h="h-20" w="w-20" />}
-        <Button onClick={handleButtonClick} full>
-          Submit
+        <Button
+          style={{ pointerEvents: formSubmitting ? "none" : "all" }}
+          onClick={handleButtonClick}
+          full
+        >
+          {formSubmitting ? <Spinner /> : "Submit"}
         </Button>
       </div>
     </NavBarContainer>
