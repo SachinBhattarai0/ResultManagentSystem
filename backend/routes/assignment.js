@@ -3,7 +3,8 @@ const { TEACHER, SCHOOL_ADMIN, SUPERUSER } = require("../models/user");
 const router = require("express").Router();
 const {
   create,
-  getAll,
+  getAllUserAssignments,
+  getAllSchoolAssignments,
   studentList,
   getCompleted,
 } = require("../controllers/assignment");
@@ -20,7 +21,18 @@ router.post(
   allowedRoles([SCHOOL_ADMIN, SUPERUSER]),
   create
 );
-router.post("/", authenticateUser, allowedRoles(TEACHER), getAll);
+router.post(
+  "/school/",
+  authenticateUser,
+  allowedRoles([SCHOOL_ADMIN, SUPERUSER]),
+  getAllSchoolAssignments
+);
+router.post(
+  "/",
+  authenticateUser,
+  allowedRoles(TEACHER),
+  getAllUserAssignments
+);
 router.post("/student-list/", authenticateUser, studentList);
 
 module.exports = router;

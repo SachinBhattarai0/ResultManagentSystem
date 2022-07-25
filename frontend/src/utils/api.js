@@ -142,6 +142,22 @@ export const createAssignment = async ({
   return await res.json();
 };
 
+export const getAssignmentsForSchool = async (schoolId = "") => {
+  const jwtToken = getJwtToken();
+  if (!jwtToken) return;
+
+  let res = await postRequest(
+    "assignment/school/",
+    { schoolId },
+    { Authorization: "Bearer " + jwtToken }
+  );
+
+  // if (res.status !== 200) return handleError();
+
+  res = await res.json();
+  return res.assignments;
+};
+
 const getJwtToken = () => localStorage.getItem("jwtToken");
 const removeJwtToken = () => localStorage.removeItem("jwtToken");
 const handleError = () => {
