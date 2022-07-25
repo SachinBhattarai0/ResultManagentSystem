@@ -1,7 +1,8 @@
 const { create } = require("../controllers/marks");
-const { authenticateUser, OnlyTeacher } = require("../middlewares/validator");
+const { authenticateUser, allowedRoles } = require("../middlewares/validator");
+const { TEACHER } = require("../models/user");
 const router = require("express").Router();
 
-router.post("/create/", authenticateUser, OnlyTeacher, create);
+router.post("/create/", authenticateUser, allowedRoles(TEACHER), create);
 
 module.exports = router;

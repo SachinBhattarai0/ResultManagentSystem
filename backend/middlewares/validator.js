@@ -44,25 +44,17 @@ exports.signInInfoValidator = [
   check("password").not().isEmpty().withMessage("Password should be present"),
 ];
 
-exports.OnlySuperUserOrSchoolAdmin = (req, res, next) => {
-  const user = req.user;
-  if (user.role !== SUPERUSER && user.role !== SCHOOL_ADMIN)
-    return sendError(res, "User does not have permission for the action", 401);
-  next();
-};
+exports.allowedRoles = (roles) => {
+  if (typeof roles === "string") {
+    roles = [roles];
+  }
+  if (!roles) return;
 
-exports.OnlySuperUser = (req, res, next) => {
-  const user = req.user;
-  if (user.role !== SUPERUSER)
-    return sendError(res, "User does not have permission for the action", 401);
-  next();
-};
-
-exports.OnlyTeacher = (req, res, next) => {
-  const user = req.user;
-  if (user.role !== TEACHER)
-    return sendError(res, "User does not have permission for the action", 401);
-  next();
+  return function (req, res, next) {
+    if (!roles.includes(req.user.role))
+      return sendError(res, "User not authorized");
+    next();
+  };
 };
 
 //This middleware checks for jwtToken in req.body and if it is

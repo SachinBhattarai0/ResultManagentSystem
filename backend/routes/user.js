@@ -11,10 +11,10 @@ const {
   userInfoValidator,
   validate,
   signInInfoValidator,
-  OnlySuperUser,
-  OnlySuperUserOrSchoolAdmin,
   authenticateUser,
+  allowedRoles,
 } = require("../middlewares/validator");
+const { SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
 
 //create superuser
 router.post("/superuser/create/", userInfoValidator, createSuperuser);
@@ -25,7 +25,7 @@ router.post("/verify/", verifyUser);
 router.post(
   "/admin/create/",
   authenticateUser,
-  OnlySuperUser,
+  allowedRoles(SUPERUSER),
   userInfoValidator,
   validate,
   createAdmin
@@ -34,7 +34,7 @@ router.post(
 router.post(
   "/teacher/create/",
   authenticateUser,
-  OnlySuperUserOrSchoolAdmin,
+  allowedRoles([SUPERUSER, SCHOOL_ADMIN]),
   userInfoValidator,
   createTeacher
 );
@@ -42,7 +42,7 @@ router.post(
 router.post(
   "/student/create/",
   authenticateUser,
-  OnlySuperUserOrSchoolAdmin,
+  allowedRoles([SUPERUSER, SCHOOL_ADMIN]),
   userInfoValidator,
   createStudent
 );

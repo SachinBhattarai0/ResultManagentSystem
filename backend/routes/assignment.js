@@ -1,19 +1,26 @@
+const { authenticateUser, allowedRoles } = require("../middlewares/validator");
+const { TEACHER, SCHOOL_ADMIN, SUPERUSER } = require("../models/user");
+const router = require("express").Router();
 const {
   create,
   getAll,
   studentList,
   getCompleted,
 } = require("../controllers/assignment");
-const {
-  authenticateUser,
-  OnlySuperUserOrSchoolAdmin,
-  OnlyTeacher,
-} = require("../middlewares/validator");
-const router = require("express").Router();
 
-router.post("/", authenticateUser, OnlyTeacher, getAll);
-router.post("/completed/", authenticateUser, OnlyTeacher, getCompleted);
-router.post("/create/", authenticateUser, OnlySuperUserOrSchoolAdmin, create);
+router.post(
+  "/completed/",
+  authenticateUser,
+  allowedRoles(TEACHER),
+  getCompleted
+);
+router.post(
+  "/create/",
+  authenticateUser,
+  allowedRoles([SCHOOL_ADMIN, SUPERUSER]),
+  create
+);
+router.post("/", authenticateUser, allowedRoles(TEACHER), getAll);
 router.post("/student-list/", authenticateUser, studentList);
 
 module.exports = router;

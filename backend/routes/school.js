@@ -1,17 +1,18 @@
 const router = require("express").Router();
 const { createSchool } = require("../controllers/school");
+const { SUPERUSER } = require("../models/user");
 const {
   schoolValidator,
   validate,
   authenticateUser,
-  OnlySuperUser,
+  allowedRoles,
 } = require("../middlewares/validator");
 
 router.post(
   "/create/",
   schoolValidator,
   authenticateUser,
-  OnlySuperUser,
+  allowedRoles(SUPERUSER),
   validate,
   createSchool
 );
