@@ -64,6 +64,65 @@ export const createMarks = async (assignmentId, marksInfo) => {
   return res;
 };
 
+export const getExams = async () => {
+  const jwtToken = getJwtToken();
+  if (!jwtToken) return;
+
+  let res = await postRequest(
+    "exam/get-all/",
+    {},
+    { Authorization: "Bearer " + jwtToken }
+  );
+  // if (res.status !== 200) return handleError();
+  res = await res.json();
+
+  return res.exams;
+};
+
+export const getClasses = async () => {
+  const jwtToken = getJwtToken();
+  if (!jwtToken) return;
+
+  let res = await postRequest(
+    "class/get-all/",
+    {},
+    { Authorization: "Bearer " + jwtToken }
+  );
+  // if (res.status !== 200) return handleError();
+  res = await res.json();
+
+  return res.classes;
+};
+export const getTeachers = async () => {
+  const jwtToken = getJwtToken();
+  if (!jwtToken) return;
+
+  let res = await postRequest(
+    "user/get-all/",
+    {},
+    { Authorization: "Bearer " + jwtToken }
+  );
+  // if (res.status !== 200) return handleError();
+  res = await res.json();
+
+  return res.teachers;
+};
+
+export const getSubjects = async (classId) => {
+  const jwtToken = getJwtToken();
+  if (!jwtToken || !classId) return;
+
+  let res = await postRequest(
+    "subject/get-all/",
+    { classId },
+    { Authorization: "Bearer " + jwtToken }
+  );
+  // if (res.status !== 200) return handleError();
+  res = await res.json();
+
+  return res.subjects;
+};
+
 const getJwtToken = () => localStorage.getItem("jwtToken");
 const removeJwtToken = () => localStorage.removeItem("jwtToken");
 const handleError = () => {

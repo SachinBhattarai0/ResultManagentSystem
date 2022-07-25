@@ -7,7 +7,7 @@ const NavBar = () => {
   const { toggleNavState, NavState } = useNavInfo();
   const { navOpen, title } = NavState;
   return (
-    <div className="flex items-center p-5 w-full text-2xl fixed top-0 bg-white z-20">
+    <div className="flex items-center p-5 w-full space-x-2 text-2xl fixed top-0 bg-white z-20">
       {navOpen ? (
         <HiMenuAlt1 onClick={toggleNavState} className="cursor-pointer" />
       ) : (

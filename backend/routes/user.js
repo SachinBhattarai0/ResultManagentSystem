@@ -6,6 +6,7 @@ const {
   signIn,
   verifyUser,
   createSuperuser,
+  getAll,
 } = require("../controllers/user");
 const {
   userInfoValidator,
@@ -20,6 +21,13 @@ const { SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
 router.post("/superuser/create/", userInfoValidator, createSuperuser);
 
 router.post("/verify/", verifyUser);
+
+router.post(
+  "/get-all/",
+  authenticateUser,
+  allowedRoles([SCHOOL_ADMIN, SUPERUSER]),
+  getAll
+);
 
 //For creating admin
 router.post(

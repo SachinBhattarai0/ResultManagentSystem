@@ -13,8 +13,8 @@ const Select = ({ defaultVal, name, options = [], ...rest }) => {
         </option>
 
         {options.map((item, i) => (
-          <option key={i} value={item.value}>
-            {item.label}
+          <option key={i} value={Object.values(item)[0]}>
+            {Object.values(item)[1]}
           </option>
         ))}
       </select>

@@ -4,7 +4,7 @@ const ClassName = require("../models/class");
 const Subject = require("../models/subject");
 const Student = require("../models/student");
 const Exam = require("../models/exam");
-const { User } = require("../models/user");
+const { User, SUPERUSER, SCHOOL_ADMIN } = require("../models/user");
 const { TEACHER } = require("../models/user");
 const sendError = require("../utils/sendError");
 
@@ -33,10 +33,15 @@ exports.getCompleted = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
+  const user = req.user;
   const { schoolId, examId, classId, subjectId, teacherId } = req.body;
 
+  if (user.role === SUPERUSER && !schoolId)
+    return sendError(res, "schoolId must be present");
+
+  if (user.role === SCHOOL_ADMIN) schoolId = user.school.toString();
+
   try {
-    //Executes all db operations concurrently
     const [school, exam, cls, subject, user] = await Promise.all([
       School.findOne({ _id: schoolId }, "_id").lean(),
       Exam.findOne({ _id: examId }, "_id school").lean(),

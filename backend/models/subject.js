@@ -6,6 +6,12 @@ const subjectSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "School",
     },
+    className: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Class",
+      },
+    ],
     name: {
       type: String,
       trim: true,

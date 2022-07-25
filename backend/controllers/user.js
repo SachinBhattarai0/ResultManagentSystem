@@ -1,4 +1,4 @@
-const { User, SCHOOL_ADMIN, SUPERUSER } = require("../models/user");
+const { User, SCHOOL_ADMIN, SUPERUSER, TEACHER } = require("../models/user");
 const sendError = require("../utils/sendError");
 const jwt = require("jsonwebtoken");
 const School = require("../models/school");
@@ -6,6 +6,21 @@ const Student = require("../models/student");
 const Class = require("../models/class");
 const { isValidObjectId } = require("mongoose");
 require("dotenv").config();
+
+exports.getAll = async (req, res) => {
+  const user = req.user;
+  let { schoolId } = req.body;
+
+  if (user.role === SUPERUSER && !isValidObjectId(schoolId))
+    return sendError(res, "Invalid schoolId");
+  if (user.role === SCHOOL_ADMIN) schoolId = user.school.toString();
+
+  const teachers = await User.find({ school: schoolId, role: TEACHER })
+    .select("username")
+    .lean();
+
+  return res.json({ teachers });
+};
 
 exports.createTeacher = async (req, res) => {
   const user = req.user;
@@ -94,6 +109,7 @@ exports.createStudent = async (req, res) => {
     studentId: newStudent._id,
   });
 };
+
 exports.signIn = async (req, res) => {
   const { username, password } = req.body;
 
