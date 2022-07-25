@@ -1,16 +1,22 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { MdAssignment, MdAssignmentTurnedIn } from "react-icons/md";
 import { useUserInfo } from "../../context/UserInfoProvider";
 import { useNavInfo } from "../../context/NavInfoProvider";
-import { CgDetailsMore } from "react-icons/cg";
 import { BiLogOut } from "react-icons/bi";
-import NavLinkEl from "./NavLinkEl";
+import TeachersNav from "./TeachersNav";
+import SchoolAdminNav from "./SchoolAdminNav";
+import SuperUserNav from "./SuperUserNav";
+import {
+  TEACHER,
+  SUPERUSER,
+  SCHOOL_ADMIN,
+} from "../../constants/userConstants";
 
 const NavBar = () => {
   const { NavState } = useNavInfo();
   const { navOpen } = NavState;
   const { handleLogout } = useUserInfo();
+  const { userState } = useUserInfo();
 
   return (
     <>
@@ -21,29 +27,9 @@ const NavBar = () => {
       >
         <div>
           <h2 className="text-2xl text-center">SES</h2>
-          <ul className="mt-4">
-            <li>
-              <NavLinkEl
-                to="/myinfo/"
-                link="My info"
-                icon={<CgDetailsMore className="text-xl" />}
-              />
-            </li>
-            <li>
-              <NavLinkEl
-                to="/assignments/"
-                link="Assignments"
-                icon={<MdAssignment className="text-xl" />}
-              />
-            </li>
-            <li>
-              <NavLinkEl
-                to="/assignment/completed/"
-                link="Completed"
-                icon={<MdAssignmentTurnedIn className="text-xl" />}
-              />
-            </li>
-          </ul>
+          {userState.role === TEACHER ? <TeachersNav /> : ""}
+          {userState.role === SCHOOL_ADMIN ? <SchoolAdminNav /> : ""}
+          {userState.role === SUPERUSER ? <SuperUserNav /> : ""}
         </div>
 
         <button className="flex space-x-1 mx-auto mb-1" onClick={handleLogout}>

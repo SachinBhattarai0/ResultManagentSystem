@@ -54,13 +54,22 @@ const AssignmentCompleted = () => {
                   to={`/assignment/completed/${assignment._id}/`}
                   state={assignment}
                 >
-                  <Button sm>View</Button>
+                  <Button
+                    extraClass="bg-dark-blue"
+                    style={{ padding: ".33rem .75rem" }}
+                  >
+                    View
+                  </Button>
                 </Link>
               </Td>
             </Tr>
           ))}
         </Table>
         {completedAssignment.isPending && <Spinner h="h-20" w="w-20" />}
+        {!completedAssignment.isPending &&
+          !completedAssignment.assignments[0] && (
+            <div className="font-lg text-center">No Assignments completed</div>
+          )}
       </div>
     </NavBarContainer>
   );

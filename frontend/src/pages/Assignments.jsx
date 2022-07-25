@@ -50,7 +50,12 @@ const Assignments = () => {
               <Td>{assignment.subject.name}</Td>
               <Td>
                 <Link to={`/assignments/${assignment._id}/`} state={assignment}>
-                  <Button sm>View</Button>
+                  <Button
+                    extraClass="bg-dark-blue"
+                    style={{ padding: ".33rem .75rem" }}
+                  >
+                    View
+                  </Button>
                 </Link>
               </Td>
             </Tr>

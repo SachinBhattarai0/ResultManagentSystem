@@ -6,6 +6,7 @@ import FormTitle from "../components/form/FormTitle";
 import { useUserInfo } from "../context/UserInfoProvider";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner/Spinner";
+import { TEACHER } from "../constants/userConstants";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -26,7 +27,9 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    if (user.isLoggedIn) return navigate("/assignments/", { replace: true });
+    if (user.isLoggedIn && user.role === TEACHER)
+      return navigate("/assignments/", { replace: true });
+    else if (user.isLoggedIn) return navigate("/admin/", { replace: true });
   }, [user]);
 
   return (
@@ -48,7 +51,7 @@ const SignIn = () => {
           onChange={changeHander}
         />
 
-        <Button style={{ pointerEvents: user.isPending ? "none" : "all" }} full>
+        <Button style={{ pointerEvents: user.isPending ? "none" : "all" }}>
           {user.isPending ? <Spinner /> : "SignIn"}
         </Button>
       </Form>
