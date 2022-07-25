@@ -9,16 +9,29 @@ import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin2Line } from "react-icons/ri";
 import { ImCross } from "react-icons/im";
-import { Link } from "react-router-dom";
 import { getAssignmentsForSchool } from "../../utils/api";
 import Spinner from "../Spinner/Spinner";
 
-const FilterAssignment = () => {
+const FilterAssignment = ({ assignmentInfo }) => {
   const [schoolAssignments, setSchoolAssignments] = useState({
     assignments: [],
-    isPending: false,
+    schoolAssignmentPending: false,
   });
-  const { assignments, isPending } = schoolAssignments;
+  const { assignments, schoolAssignmentPending } = schoolAssignments;
+  const { exams, classes, teachers } = assignmentInfo;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { target } = e;
+    const targetArr = [...target];
+    const filterByData = {};
+
+    targetArr.forEach(({ name, value }) => {
+      if (value) filterByData[name] = value;
+    });
+    console.log(filterByData);
+    //submit the data and set schoolAssignments
+  };
 
   useEffect(() => {
     const fetchSchoolAssignments = async () => {
@@ -29,31 +42,39 @@ const FilterAssignment = () => {
     };
     fetchSchoolAssignments();
   }, []);
+
   return (
     <div className="bg-white m-4 rounded flex flex-col p-4">
       <h1 className="text-xl">Filter Assignments:</h1>
-      <form className="py-4 space-y-2">
+      <form className="py-4 space-y-2" onSubmit={handleSubmit}>
+        <Select defaultVal="Select Exam" name="examId" options={exams} />
+        <Select defaultVal="Select Class" name="classId" options={classes} />
         <Select
-          defaultVal="Select Exam"
-          options={[{ value: "val", label: "value" }]}
+          defaultVal="Select Teacher"
+          name="teacherId"
+          options={teachers}
         />
-        <Select
-          defaultVal="Select Class:"
-          options={[{ value: "val", label: "value" }]}
-        />
-        <Select
-          defaultVal="Select To:"
-          options={[{ value: "val", label: "value" }]}
-        />
-        <div className="flex items-center space-x-1">
-          <label>Completed:</label>
-          <input type="checkbox" className="h-5 w-5" />
+        <div>
+          <span>Completed:</span>
+          <select
+            name="completed"
+            className="ml-3 border border-black outline-none"
+          >
+            <option value="false" defaultValue>
+              False
+            </option>
+            <option value="true">True</option>
+          </select>
         </div>
+
         <Button
-          extraClass="bg-dark-blue"
-          style={{ padding: ".33rem .75rem", width: "100%" }}
+          style={{
+            padding: ".33rem .75rem",
+            width: "100%",
+            pointerEvents: schoolAssignmentPending ? "none" : "all",
+          }}
         >
-          Filter
+          {schoolAssignmentPending ? <Spinner /> : "Filter"}
         </Button>
       </form>
       <div className="py-2 flex-1 flex flex-col items-start justify-center">
@@ -66,8 +87,8 @@ const FilterAssignment = () => {
             <Th>Done</Th>
             <Th>Action</Th>
           </Tr>
-          {assignments.map((item) => (
-            <Tr>
+          {assignments.map((item, i) => (
+            <Tr key={i}>
               <Td>
                 {item.exam?.year}-{item.exam?.month}-{item.exam?.date}
               </Td>
@@ -93,8 +114,8 @@ const FilterAssignment = () => {
           ))}
         </Table>
 
-        {isPending && <Spinner h="h-20" w="w-20" />}
-        {!isPending && !assignments[0] && (
+        {schoolAssignmentPending && <Spinner h="h-20" w="w-20" />}
+        {!schoolAssignmentPending && !assignments[0] && (
           <div className="font-lg text-center">No Assignments</div>
         )}
       </div>

@@ -1,28 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Select from "../form/Select";
 import Button from "../form/Button";
 import { useAlert } from "../../context/AlertContext";
 import { SUCCESS } from "../../constants/messgeConstants";
 import Spinner from "../Spinner/Spinner";
-import {
-  getExams,
-  getClasses,
-  getTeachers,
-  getSubjects,
-  createAssignment,
-} from "../../utils/api";
+import { getSubjects, createAssignment } from "../../utils/api";
 
-const DEFAULT_STATE = {
-  exams: [],
-  classes: [],
-  teachers: [],
-  subjects: [],
-  isPending: false,
-};
-
-const AddAssignment = () => {
+const AddAssignment = ({ assignmentInfo, setAssignmentInfo, defaultState }) => {
   const { updateAlert } = useAlert();
-  const [assignmentInfo, setAssignmentInfo] = useState(DEFAULT_STATE);
   const { exams, classes, teachers, subjects, isPending } = assignmentInfo;
 
   const fetchSubjectsForClass = async ({ target }) => {
@@ -30,40 +15,21 @@ const AddAssignment = () => {
     setAssignmentInfo({ ...assignmentInfo, subjects });
   };
 
-  useEffect(() => {
-    if (isPending) return;
-    const fetchAssignmentDetails = async () => {
-      const exams = await getExams();
-      const classes = await getClasses();
-      const teachers = await getTeachers();
-
-      setAssignmentInfo({ ...assignmentInfo, exams, classes, teachers });
-    };
-
-    fetchAssignmentDetails();
-  }, [isPending]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const targetArr = [...e.target];
     const data = {};
 
-    [...e.target].forEach(({ name, value }) => {
+    targetArr.forEach(({ name, value }) => {
       data[name] = value;
     });
 
-    const missingKey = Object.entries(data)
-      .map(([key, value]) => !value && key)
-      .filter((item) => item)[0];
+    setAssignmentInfo({ ...assignmentInfo, isPending: true });
+    const res = await createAssignment(data);
 
-    if (missingKey) updateAlert(`${missingKey} is missing!`);
-    else {
-      setAssignmentInfo({ ...assignmentInfo, isPending: true });
-      const res = await createAssignment(data);
-
-      setAssignmentInfo({ ...DEFAULT_STATE });
-      if (res.error) return updateAlert(res.error);
-      else return updateAlert(res.message, SUCCESS);
-    }
+    setAssignmentInfo({ ...defaultState });
+    if (res.error) return updateAlert(res.error);
+    else return updateAlert(res.message, SUCCESS);
   };
 
   return (

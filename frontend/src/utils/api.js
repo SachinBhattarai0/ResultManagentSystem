@@ -123,19 +123,14 @@ export const getSubjects = async (classId) => {
   return res.subjects;
 };
 
-export const createAssignment = async ({
-  examId,
-  classId,
-  subjectId,
-  teacherId,
-}) => {
+export const createAssignment = async (data) => {
   const jwtToken = getJwtToken();
 
-  if (!examId || !classId || !subjectId || !teacherId || !jwtToken) return;
+  if (!jwtToken) return;
 
   let res = await postRequest(
     "assignment/create/",
-    { examId, classId, subjectId, teacherId },
+    { ...data },
     { Authorization: "Bearer " + jwtToken }
   );
 
