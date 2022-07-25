@@ -34,7 +34,7 @@ exports.getCompleted = async (req, res) => {
 
 exports.create = async (req, res) => {
   const user = req.user;
-  const { schoolId, examId, classId, subjectId, teacherId } = req.body;
+  let { schoolId, examId, classId, subjectId, teacherId } = req.body;
 
   if (user.role === SUPERUSER && !schoolId)
     return sendError(res, "schoolId must be present");
@@ -68,7 +68,10 @@ exports.create = async (req, res) => {
     });
     await newAssignment.save();
 
-    return res.json({ assignmentId: newAssignment._id });
+    return res.json({
+      assignmentId: newAssignment._id,
+      message: "Assignment created Successfully",
+    });
   } catch (error) {
     return sendError(
       res,

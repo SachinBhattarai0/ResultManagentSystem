@@ -73,7 +73,7 @@ export const getExams = async () => {
     {},
     { Authorization: "Bearer " + jwtToken }
   );
-  // if (res.status !== 200) return handleError();
+  if (res.status !== 200) return handleError();
   res = await res.json();
 
   return res.exams;
@@ -88,7 +88,7 @@ export const getClasses = async () => {
     {},
     { Authorization: "Bearer " + jwtToken }
   );
-  // if (res.status !== 200) return handleError();
+  if (res.status !== 200) return handleError();
   res = await res.json();
 
   return res.classes;
@@ -102,7 +102,7 @@ export const getTeachers = async () => {
     {},
     { Authorization: "Bearer " + jwtToken }
   );
-  // if (res.status !== 200) return handleError();
+  if (res.status !== 200) return handleError();
   res = await res.json();
 
   return res.teachers;
@@ -117,10 +117,29 @@ export const getSubjects = async (classId) => {
     { classId },
     { Authorization: "Bearer " + jwtToken }
   );
-  // if (res.status !== 200) return handleError();
+  if (res.status !== 200) return handleError();
   res = await res.json();
 
   return res.subjects;
+};
+
+export const createAssignment = async ({
+  examId,
+  classId,
+  subjectId,
+  teacherId,
+}) => {
+  const jwtToken = getJwtToken();
+
+  if (!examId || !classId || !subjectId || !teacherId || !jwtToken) return;
+
+  let res = await postRequest(
+    "assignment/create/",
+    { examId, classId, subjectId, teacherId },
+    { Authorization: "Bearer " + jwtToken }
+  );
+
+  return await res.json();
 };
 
 const getJwtToken = () => localStorage.getItem("jwtToken");

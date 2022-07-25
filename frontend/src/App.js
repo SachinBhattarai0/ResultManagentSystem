@@ -11,6 +11,7 @@ import Alert from "./components/Alert/Alert";
 import SchoolInfo from "./pages/Admin/SchoolInfo";
 import CompletedAssignment from "./pages/CompletedAssignment";
 import AllAssignments from "./pages/Admin/Assignments";
+import { Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
       <Alert />
 
       <Routes>
+        <Route path="/" element={<Navigate to="/auth/signIn" />} />
+
         <Route
           path="/assignments/"
           element={<Protected allowedRoles={[TEACHER]} el={<SideNav />} />}

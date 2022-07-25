@@ -28,7 +28,8 @@ exports.create = async (req, res) => {
   if (!isValidObjectId(schoolId)) return sendError(res, "Invalid schoolId");
   if (!classes[0]) return sendError(res, "classes is required");
 
-  //Be aware of //
+  console.log("this type");
+  console.log("transactions");
   const invalidClassId = classes.filter((classId) => !isValidObjectId(classId));
   if (invalidClassId.length !== 0) return sendError(res, "classId is invalid");
 
