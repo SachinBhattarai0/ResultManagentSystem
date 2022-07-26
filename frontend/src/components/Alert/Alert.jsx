@@ -7,7 +7,7 @@ const Alert = () => {
   return (
     alertState.message && (
       <div
-        className={`absolute top-5 z-30 left-1/2 text-white p-2 rounded gelatine-animation ${alertState.type}`}
+        className={`absolute top-5 z-30 left-1/2 -translate-x-1/2 text-white p-2 rounded gelatine-animation ${alertState.type}`}
       >
         {alertState.message}
       </div>

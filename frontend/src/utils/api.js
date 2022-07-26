@@ -38,11 +38,25 @@ export const getStudentList = async (assignmentId) => {
   if (!assignmentId || !jwtToken) return;
 
   let res = await postRequest(
-    `assignment/student-list/`,
+    `student/get-for-assignment/`,
     { assignmentId },
     { Authorization: "Bearer " + jwtToken }
   );
-  // if (res.status !== 200) return handleError();
+  if (res.status !== 200) return handleError();
+  res = await res.json();
+
+  return res;
+};
+
+export const getStudentByExamAndClass = async (examId, classId) => {
+  const jwtToken = getJwtToken();
+  if (!examId || !classId || !jwtToken) return;
+
+  let res = await postRequest(
+    `student/get-by-exam-and-class/`,
+    { examId, classId },
+    { Authorization: "Bearer " + jwtToken }
+  );
   res = await res.json();
 
   return res;
@@ -147,7 +161,7 @@ export const getAssignmentsForSchool = async (schoolId = "") => {
     { Authorization: "Bearer " + jwtToken }
   );
 
-  // if (res.status !== 200) return handleError();
+  if (res.status !== 200) return handleError();
 
   res = await res.json();
   return res.assignments;

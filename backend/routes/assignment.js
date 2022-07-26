@@ -33,6 +33,5 @@ router.post(
   allowedRoles(TEACHER),
   getAllUserAssignments
 );
-router.post("/student-list/", authenticateUser, studentList);
 
 module.exports = router;

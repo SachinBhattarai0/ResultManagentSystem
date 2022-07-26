@@ -25,15 +25,15 @@ input[type="number"] {
 @keyframes gelatine {
   from,
   to {
-    transform: scale(1, 1);
+    transform: scale(1, 1) translateX(-50%);
   }
   25% {
-    transform: scale(0.9, 1.1);
+    transform: scale(0.9, 1.1) translateX(-50%);
   }
   50% {
-    transform: scale(1.1, 0.9);
+    transform: scale(1.1, 0.9) translateX(-50%);
   }
   75% {
-    transform: scale(0.95, 1.05);
+    transform: scale(0.95, 1.05) translateX(-50%);
   }
 }

@@ -188,7 +188,6 @@ const AssignmentMarks = () => {
         <Button
           style={{ pointerEvents: formSubmitting ? "none" : "all" }}
           onClick={handleButtonClick}
-          full
         >
           {formSubmitting ? <Spinner /> : "Submit"}
         </Button>

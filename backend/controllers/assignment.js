@@ -98,27 +98,3 @@ exports.create = async (req, res) => {
     );
   }
 };
-
-exports.studentList = async (req, res) => {
-  const { assignmentId } = req.body;
-  const loggedInUser = req.user;
-
-  const assignment = await Assignment.findById(assignmentId).lean();
-  if (!assignment) return sendError(res, "Invalid assignment id");
-
-  if (loggedInUser._id.toString() !== assignment.to.toString())
-    return sendError(res, "User not allowed for action", 401);
-
-  const studentList = await Student.find(
-    {
-      active: true,
-      className: assignment.className,
-      subjects: assignment.subject,
-    },
-    "name rollNo"
-  )
-    .sort("rollNo")
-    .lean();
-
-  return res.json({ studentList });
-};

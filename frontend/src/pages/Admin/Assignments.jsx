@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavBarContainer from "../../components/NavBarContainer/NavBarContainer";
 import CreateAssignment from "../../components/Admin/CreateAssignment";
-import FilterAssignment from "../../components/Admin/FilterAssignment";
+import AssignmentTable from "../../components/Admin/AssignmentTable.jsx";
 import { getClasses, getExams, getTeachers } from "../../utils/api";
 
 const DEFAULT_ASSIGNMENT_STATE = {
@@ -16,10 +16,9 @@ const Assignments = () => {
   const [assignmentInfo, setAssignmentInfo] = useState(
     DEFAULT_ASSIGNMENT_STATE
   );
-  const { isPending } = assignmentInfo;
 
   useEffect(() => {
-    if (isPending) return;
+    if (assignmentInfo.isPending) return;
     const fetchAssignmentDetails = async () => {
       const exams = await getExams();
       const classes = await getClasses();
@@ -29,7 +28,7 @@ const Assignments = () => {
     };
 
     fetchAssignmentDetails();
-  }, [isPending]);
+  }, [assignmentInfo.isPending]);
 
   return (
     <NavBarContainer>
@@ -38,11 +37,7 @@ const Assignments = () => {
         setAssignmentInfo={setAssignmentInfo}
         defaultState={DEFAULT_ASSIGNMENT_STATE}
       />
-      <FilterAssignment
-        assignmentInfo={assignmentInfo}
-        setAssignmentInfo={setAssignmentInfo}
-        defaultState={DEFAULT_ASSIGNMENT_STATE}
-      />
+      <AssignmentTable />
     </NavBarContainer>
   );
 };

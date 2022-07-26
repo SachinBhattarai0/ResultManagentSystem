@@ -6,6 +6,7 @@ const subjectRoutes = require("./routes/subject");
 const classRoutes = require("./routes/class");
 const examRoutes = require("./routes/exam");
 const marksRoutes = require("./routes/marks");
+const studentRoutes = require("./routes/students");
 const cors = require("cors");
 require("dotenv").config();
 require("./db");
@@ -16,6 +17,7 @@ app.use(cors());
 
 app.use("/api/user", userRoutes);
 app.use("/api/school", schoolRoutes);
+app.use("/api/student", studentRoutes);
 app.use("/api/assignment", assignmentRoutes);
 app.use("/api/subject", subjectRoutes);
 app.use("/api/class", classRoutes);

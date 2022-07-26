@@ -12,6 +12,7 @@ import SchoolInfo from "./pages/Admin/SchoolInfo";
 import CompletedAssignment from "./pages/CompletedAssignment";
 import AllAssignments from "./pages/Admin/Assignments";
 import { Navigate } from "react-router-dom";
+import Marksheets from "./pages/Admin/Marksheets";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         >
           <Route index element={<SchoolInfo />} />
           <Route path="assignments/" element={<AllAssignments />} />
+          <Route path="marksheets/" element={<Marksheets />} />
         </Route>
 
         <Route path="auth/signIn/" element={<SignIn />} />
