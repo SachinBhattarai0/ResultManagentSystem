@@ -167,6 +167,31 @@ export const getAssignmentsForSchool = async (schoolId = "") => {
   return res.assignments;
 };
 
+export const downloadStudentMarkheet = async (studentId, examId) => {
+  const jwtToken = getJwtToken();
+  if (!jwtToken || !studentId || !examId) return;
+
+  let res = await postRequest(
+    "pdf/student/",
+    { studentId, examId },
+    { Authorization: "Bearer " + jwtToken }
+  );
+  console.log(res);
+  return res;
+};
+export const downloadClassMarkheet = async (classId, examId) => {
+  const jwtToken = getJwtToken();
+  if (!jwtToken || !classId || !examId) return;
+
+  let res = await postRequest(
+    "pdf/class/",
+    { classId, examId },
+    { Authorization: "Bearer " + jwtToken }
+  );
+  console.log(res);
+  return res;
+};
+
 const getJwtToken = () => localStorage.getItem("jwtToken");
 const removeJwtToken = () => localStorage.removeItem("jwtToken");
 const handleError = () => {

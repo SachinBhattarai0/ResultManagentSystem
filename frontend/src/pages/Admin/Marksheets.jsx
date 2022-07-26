@@ -10,6 +10,7 @@ import Td from "../../components/Table/Td";
 import { useAlert } from "../../context/AlertContext";
 import Spinner from "../../components/Spinner/Spinner";
 import {
+  downloadStudentMarkheet,
   getClasses,
   getExams,
   getStudentByExamAndClass,
@@ -45,9 +46,15 @@ const Marksheets = () => {
     setStudentList({ ...studentList, students: res.studentList });
   };
 
-  const handleStudentMarkSheetPrint = (studentId) => {
+  const handleStudentMarkSheetPrint = async (studentId) => {
     if (!studentId) return updateAlert("Student id is needed");
-    console.log(studentId);
+    const res = await downloadStudentMarkheet(studentId, examId);
+    const blob = await res.blob();
+
+    const a = document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = "markSheet.pdf";
+    a.click();
   };
   const handleClassMarkSheetPrint = (e) => {
     e.preventDefault();

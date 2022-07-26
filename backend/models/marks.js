@@ -30,16 +30,6 @@ const markSchema = mongoose.Schema(
         practicalMark: Number,
       },
     ],
-    // subject: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Subject",
-    //   required: true,
-    // },
-    // mark: {
-    //   type: Object,
-    //   theoryMark: number,
-    //   practicalMark: number,
-    // },
   },
   { timestamps: true }
 );

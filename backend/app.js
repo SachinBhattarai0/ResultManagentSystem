@@ -7,6 +7,7 @@ const classRoutes = require("./routes/class");
 const examRoutes = require("./routes/exam");
 const marksRoutes = require("./routes/marks");
 const studentRoutes = require("./routes/students");
+const pdfRoutes = require("./pdf/routes");
 const cors = require("cors");
 require("dotenv").config();
 require("./db");
@@ -23,5 +24,7 @@ app.use("/api/subject", subjectRoutes);
 app.use("/api/class", classRoutes);
 app.use("/api/exam", examRoutes);
 app.use("/api/marks", marksRoutes);
+
+app.use("/api/pdf", pdfRoutes);
 
 app.listen(8000, () => console.log("Listening at port 8000"));

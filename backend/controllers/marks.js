@@ -1,4 +1,4 @@
-const { SCHOOL_ADMIN, SUPERUSER, TEACHER } = require("../models/user");
+const Subject = require("../models/subject");
 const sendError = require("../utils/sendError");
 const Marks = require("../models/marks");
 const Assignment = require("../models/assignment");
@@ -11,10 +11,12 @@ exports.create = async (req, res) => {
   if (!assignment) return sendError(res, "Invalid assignment id");
   const { school, exam, className, subject } = assignment;
 
+  const subjectItem = await Subject.findById(subject).select("name").lean();
+
   try {
     marksInfo.forEach(async (markInfo) => {
       const mark = {
-        subject,
+        subject: subjectItem.name,
         theoryMark: markInfo.theoryMark,
         practicalMark: markInfo.practicalMark,
       };
